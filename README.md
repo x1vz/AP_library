@@ -8,5 +8,5 @@ loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/x1vz/AP_library/
 ```
 The script may take around 10 - 15 seconds to execute, if it doesn't work it's probably cause of your executor.
 
-## Communication Server
+## Contacts
 [Discord Server](https://discord.gg/mSfDxsEMDB)
