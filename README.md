@@ -1,6 +1,6 @@
 # Nexus Client
 
-A free to use script for the roblox game Electric State DarkRP
+A free to use script for the Roblox game Electric State DarkRP
 
 ## Script
 ```luau
